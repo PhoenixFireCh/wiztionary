@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+h1, h2, h3, p, label, th, input {
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+h1, h2, label, th, p, input {
+  color: aliceblue;
+}
+
+h1 {
+  font-size: 50px;
+}
+
+h2 {
+  font-size: 30px;
+}
+
+tr {
+  display: flex;
+  justify-content: space-around;
+}
+
+thead, tbody {
+  width: 100%;
+}
+

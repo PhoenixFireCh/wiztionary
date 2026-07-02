@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+.InfoCard {
+    background-color: rgb(107, 45, 45);
+    border-radius: 20px;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 100%;
+}
