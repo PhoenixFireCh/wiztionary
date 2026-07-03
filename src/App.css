@@ -7,15 +7,19 @@ html, #root, .App, body {
 }
 
 .App {
-  background-color: rgb(28 33 43);
+  background-image: url('./bark.png');
+  background-size: cover;
+  height: fit-content;
+  min-height: 100%;
 }
 
 .headerContainer {
   width: 100%;
-  height: 10%;
+  height: 80px;
 }
 
 header {
+  z-index: 1;
   position: fixed;
   width: inherit;
   height: inherit;
@@ -23,8 +27,21 @@ header {
   flex-direction: row;
   background-color: rgb(107, 45, 45);
   align-items: center;
+  justify-content: space-between;
 }
 
+.logo, .links  {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.icon {
+  background-image: url('./icon.svg');
+  background-repeat: no-repeat;
+  width: 60px;
+  height: 60px;
+}
 
 .main {
   display: flex;
@@ -36,8 +53,8 @@ header {
 }
 
 .navBarContainer {
-  height: 70%;
-  width: 20%;
+  height: 80%;
+  width: 25%;
 }
 
 nav {
@@ -45,12 +62,14 @@ nav {
   width: inherit;
   position: fixed;
   border-radius: 20px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: rgb(107, 45, 45);
   background-image: url('./wood.png');
   background-size: cover;
+  box-shadow: 0px 4px 5px rgba(0, 0, 0);
 }
 
 form {
@@ -59,10 +78,30 @@ form {
   align-items: center;
 }
 
-label {
-  margin-top: 10px;
+.text {
+  background-color: beige;
+  color: rgb(36, 36, 36);
+  border-radius: 5px;
+  box-shadow: inset 0px 4px 1px rgb(148 55 55 / 72%);
 }
 
+.select {
+  background-color: beige;
+  color: rgb(36, 36, 36);
+  border-radius: 5px;
+  box-shadow: inset 0px 4px 1px rgb(148 55 55 / 72%);
+}
+
+.range::-webkit-slider-runnable-track {
+  background: beige;
+  height: auto;
+  box-shadow: inset 0px 4px 1px rgb(148 55 55 / 72%);
+  border-radius: 10px;
+}
+
+.range {
+  accent-color: rgb(36, 36, 36);;
+}
 
 .contentBox {
   width: 70%;
@@ -72,7 +111,9 @@ label {
   flex-direction: column;
   background-color: rgb(46, 51, 83);
   background-image: url('./paper.png');
+  background-attachment: fixed;
   background-size: cover;
+  box-shadow: inset 3px 4px 1px rgba(20, 5, 5, 0.72);
 }
 
 .cardBox {
@@ -89,13 +130,13 @@ label {
   align-items: center;
 }
 
+tbody tr {
+  background-color: rgba(28, 33, 43, 0.449);
+  border-radius: 10px;
+  transition: ease 0.3s;
+}
 
-
-
-
-
-
-
-
-
-
+tbody tr:hover {
+  scale: 1.05;
+  background-color: rgba(28, 33, 43, 0.682);
+}

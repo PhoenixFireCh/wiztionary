@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+.InfoPage {
+    height: 300px;
+    overflow-y: scroll;
+    scrollbar-color: rgb(36, 36, 36) rgba(245, 245, 220, 0);
+}
+
+.InfoPage::-webkit-scrollbar{
+  border-radius: 10px;
+}
+
+.InfoPage p {
+    text-wrap: pre-wrap;
+}

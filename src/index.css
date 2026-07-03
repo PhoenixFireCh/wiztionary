@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
-h1, h2, h3, p, label, th, input {
+h1, h2, h3, p, label, th, input, select, option, a  {
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
-h1, h2, label, th, p, input {
+h1, h2, h3, label, th, p, input, a{
   color: aliceblue;
 }
 
@@ -16,12 +16,36 @@ h2 {
   font-size: 30px;
 }
 
+h3 {
+  font-size: 20px;
+}
+
+a {
+  font-size: 20px;
+  padding: 10px;
+  transition: ease 0.3s;
+  border-radius: 10px;
+}
+
+a:hover {
+  color: rgb(110, 60, 37);
+  box-shadow: inset 0px 4px 1px rgba(42, 17, 17, 0.72);
+}
+
 tr {
   display: flex;
   justify-content: space-around;
 }
 
+th {
+  width: 100px;;
+}
+
 thead, tbody {
   width: 100%;
+}
+
+label {
+  margin-top: 10px;
 }
 
