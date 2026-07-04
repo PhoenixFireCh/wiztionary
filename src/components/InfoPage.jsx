@@ -9,7 +9,7 @@ const InfoPage = ({o}) => {
                 <p>Range: {o.range}</p>
                 <p>Duration: {o.duration}</p>
                 <p>Targets: {o.target_type}</p>
-                <p>Usable by: {o.classes.map(o => o.name).join(' ,')}</p>
+                <p>Usable by: {o.classes.map(o => o.name).join(', ')}</p>
             </div>
             <p className="mt-3">{o.desc}</p>
         </div>

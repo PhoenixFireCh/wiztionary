@@ -9,7 +9,6 @@ import 'tippy.js/dist/tippy.css';
 import './App.css'
 
 function App() {
-  const time = new Date();
   const [items, setItems] = useState([]);
   const [filters, setFilters] = useState({search:"", level:0, class:'', ordering:'name'}); //search, level, class, ordering
   const [highestDmg, setHighestDmg] = useState({dmg: '', name: ''});
@@ -80,7 +79,7 @@ function App() {
               </h1>
               <div className='icon ml-1'></div>
             </div>
-            <div className='links'>
+            <div className='links mr-5'>
               <a href='https://github.com/PhoenixFireCh/wictionary'>Github Repository</a>
               <a href='https://open5e.com/api-docs'>Api Used</a>
             </div>
