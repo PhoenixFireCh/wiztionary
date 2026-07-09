@@ -7,22 +7,22 @@ const sorters = {
 };
 export const Filters = {
     findHighestDmg(list) {
-    const filtered = list.map(o => ({dmg: o.damage_roll, name: o.name}));
+    const filtered = list.map(o => ({dmg: o.damage_roll, name: o.name})); //Filters out other attributes
     let longest = {dmg: '', name: ''};
     let longestTotal = 0;
     for (const item of filtered) {
       if (item.dmg.length > 0) {
-        const [count, sides] = item.dmg.split("d").map(Number);
-        if ((count * sides) > longestTotal) {
+        const total = this.parseDice(item.dmg);
+        if (total > longestTotal) {
           longest = {dmg: item.dmg, name: item.name};
-          longestTotal = count * sides;
+          longestTotal = total;
         }
       }
     }
     return longest
   },
   findLongestRange(list) {
-    const filtered = list.map(o => ({range: o.range, name: o.name}));
+    const filtered = list.map(o => ({range: o.range, name: o.name})); //Filters out other attributes
     filtered.sort((a,b) => b.range - a.range); 
     if (filtered.length > 0) {
       return {range: filtered[0].range, name: filtered[0].name};
@@ -61,10 +61,28 @@ export const Filters = {
       const school = item.school.name;
       const range = item.range;
       if (![...result.keys()].includes(school) || result.get(school) < range) {
-        result.set(school, range)
+        result.set(school, range);
       }
     }
     
     return Array.from(result, ([school, range]) => ({school, range}));
+  },
+  graphSchoolDamage(list) {
+    let result = new Map();
+    for (const item of list) {
+      const school = item.school.name;
+      const damage = this.parseDice(item.damage_roll);
+      if ((![...result.keys()].includes(school) || result.get(school) < damage) && !Number.isNaN(damage)) {
+        result.set(school, damage);
+      }
+    }
+    return Array.from(result, ([school, dmg]) => ({school, dmg}));
+  }, 
+  parseDice(string) {
+    const split = string.split("+").map(die => {
+                  const [count, sides] = die.split("d").map(Number);
+                  return {count, sides};
+                });
+    return split.reduce((sum, die) => sum + (die.count * die.sides), 0);
   }
 };

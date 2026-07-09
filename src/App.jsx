@@ -10,15 +10,16 @@ import 'react-tippy/dist/tippy.css';
 import './App.css'
 import {ScatterChart, Scatter, XAxis, YAxis, ZAxis, Legend, BarChart, Bar, CartesianGrid, Tooltip, ResponsiveContainer} from 'recharts';
 
+
 function App() {
-  const empty = [];
   const [items, setItems] = useState([]);
   const [filteredItems, setFiltered] = useState([]);
   const [filters, setFilters] = useState({search:"", level:0, class:'', ordering:'name'}); //search, level, class, ordering
   const [highestDmg, setHighestDmg] = useState({dmg: '', name: ''});
   const [longestRange, setLongestRange] = useState({range: 0, name: ''});
   const [hoveredValue, setHovered] = useState(null)
-  const [graphSchool, setGraphSchool] = useState([]);
+  const [graphRange, setGraphRange] = useState([]);
+  const [graphDmg, setGraphDmg] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,7 +60,8 @@ function App() {
     setFiltered(filtered);
     setLongestRange(Filters.findLongestRange(filtered));
     setHighestDmg(Filters.findHighestDmg(filtered));
-    setGraphSchool(Filters.graphSchoolRange(filtered));
+    setGraphRange(Filters.graphSchoolRange(filtered));
+    setGraphDmg(Filters.graphSchoolDamage(filtered));
   }
 
   const setHovering = (e) => {
@@ -119,7 +121,7 @@ function App() {
                 </select>
               </form>
               <h2 className='mt-5'>How to use</h2> 
-              {/* blabalaalbalbababbablablblablablabl */}
+              <p>Use the filters to filter through specific spells based on their levels and classes. The graphs on the right shows the aggregated data of each individual spell level and will change based on the filtering. Click on a spell to show more details about them.</p>
               {/* {
                 (hoveredValue == null)
                 ? <p>Hover over a spell to get started!</p>
@@ -153,10 +155,10 @@ function App() {
           <div className='chartContainer mt-5'>
             <div className='charts'>
               <div className='chart'>
-                <h2 className='text-center'>Max range by school</h2>
+                <h2 className='text-center'>Max Range by School</h2>
                 <div className='chartWrapper'>
                   <ResponsiveContainer width="100%" height={225}>
-                    <BarChart responsive data={graphSchool} margin={{ top: 20, right: 20, left: -10, bottom: 0 }}>
+                    <BarChart responsive data={graphRange} margin={{ top: 20, right: 20, left: -10, bottom: 0 }}>
                       <XAxis name='schools' dataKey="school" axisLine={{ stroke: "#fcd34d" }} tick={{ fill: "#fcd34d", fontSize: 14 }} tickFormatter={(name) => name.slice(0, 3)}/>
                       <YAxis axisLine={{ stroke: "#fcd34d" }} tick={{ fill: "#fcd34d", fontSize: 14 }} />
                       <Legend />
@@ -175,7 +177,26 @@ function App() {
                 </div>
               </div>
               <div className='chart'>
-
+                <h2 className='text-center'>Max Damage Roll by School</h2>
+                <div className='chartWrapper'>
+                  <ResponsiveContainer width="100%" height={225}>
+                    <BarChart responsive data={graphDmg} margin={{ top: 20, right: 20, left: -10, bottom: 0 }}>
+                      <XAxis name='schools' dataKey="school" axisLine={{ stroke: "#fcd34d" }} tick={{ fill: "#fcd34d", fontSize: 14 }} tickFormatter={(name) => name.slice(0, 3)}/>
+                      <YAxis axisLine={{ stroke: "#fcd34d" }} tick={{ fill: "#fcd34d", fontSize: 14 }} />
+                      <Legend />
+                      <Tooltip contentStyle={{
+                          backgroundColor: "#1f2937",
+                          borderRadius: "8px",
+                          border: "none",
+                          color: "#fcd34d"         
+                        }}
+                        labelStyle={{ color: "#fcd34d"}}  
+                        itemStyle={{ color: "#fcd34d" }}
+                        />
+                      <Bar dataKey="dmg" fill="rgb(107, 45, 45)" activeBar={{ fill: 'pink', stroke: 'yellow' }} radius={[10, 10, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
             </div>
           </div>
