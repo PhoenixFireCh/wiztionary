@@ -17,7 +17,7 @@ h2 {
 }
 
 h3 {
-  font-size: 20px;
+  font-size: 25px;
 }
 
 a {
@@ -47,5 +47,6 @@ thead, tbody {
 
 label {
   margin-top: 10px;
+  text-align: center;
 }
 

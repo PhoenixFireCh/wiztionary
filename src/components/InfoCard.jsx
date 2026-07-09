@@ -4,8 +4,8 @@ const InfoCard = ({description, data, spName}) => {
 
     return (
         <div className='InfoCard' >
-            <h2 className='text-center p-1'>{description}</h2>
-            <h2>{data}</h2>
+            <h3 className='text-center p-1'>{description}</h3>
+            <h3>{data}</h3>
             <p>{spName}</p>
         </div>
     );

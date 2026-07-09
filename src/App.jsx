@@ -4,30 +4,40 @@ import { useState, useEffect } from 'react'
 import InfoCard from './components/InfoCard'
 import InfoPage from './components/InfoPage'
 import Item from './components/Item'
-import Tippy from '@tippyjs/react';
-import 'tippy.js/dist/tippy.css';
+import { Filters } from './Filters.js'
+import { Tooltip as TippyTooltip } from 'react-tippy';
+import 'react-tippy/dist/tippy.css';
 import './App.css'
+import {ScatterChart, Scatter, XAxis, YAxis, ZAxis, Legend, BarChart, Bar, CartesianGrid, Tooltip, ResponsiveContainer} from 'recharts';
 
 function App() {
+  const empty = [];
   const [items, setItems] = useState([]);
+  const [filteredItems, setFiltered] = useState([]);
   const [filters, setFilters] = useState({search:"", level:0, class:'', ordering:'name'}); //search, level, class, ordering
   const [highestDmg, setHighestDmg] = useState({dmg: '', name: ''});
   const [longestRange, setLongestRange] = useState({range: 0, name: ''});
   const [hoveredValue, setHovered] = useState(null)
+  const [graphSchool, setGraphSchool] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("https://api.open5e.com/v2/spells/?limit=500&ordering="+filters.ordering+"&fields=name,level,classes,damage_roll,range,duration,desc,target_type&format=json&document__fields=name,key&classes__fields=name&school__fields=name,key&name__contains=" + filters.search + "&level=" + filters.level + "&classes__name__in=" + filters.class);
-      const json = await response.json();
-      setItems(json.results);
-      findHighestDmg(json.results);
-      findLongestRange(json.results);
+      const response = await fetch("https://api.open5e.com/v2/spells/?limit=10000&fields=name,level,classes,damage_roll,range,duration,desc,target_type,school");
+      let json = await response.json();
+      json = json.results.map(item => ({
+        ...item,
+        id: crypto.randomUUID()
+      }));
+      json = json.filter(item => item.range <= 10000); //Filters certain spells with comically ridiculous range (they break my graphs)
+      setItems(json);
+      updateVars(json); // Update vars as soon as it loads
     }
-    const timeout = setTimeout(() => {
-      fetchData().catch(console.error)
-    }, 500);
-    return () => clearTimeout(timeout)
-  },[filters]) 
+    fetchData().catch(console.error);
+  },[]) 
+
+  useEffect(() => {
+    updateVars();
+  },[filters])
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -39,28 +49,17 @@ function App() {
     }))
   }
 
-  const findHighestDmg = (list) => {
-    const filtered = list.map(o => ({dmg: o.damage_roll, name: o.name}));
-    let longest = {dmg: '', name: ''};
-    let longestTotal = 0;
-    for (const item of filtered) {
-      if (item.dmg.length > 0) {
-        const [count, sides] = item.dmg.split("d").map(Number);
-        if ((count * sides) > longestTotal) {
-          longest = {dmg: item.dmg, name: item.name};
-          longestTotal = count * sides;
-        }
-      }
+  const updateVars = (list) => {
+    let filtered;
+    if (list != null) {
+      filtered = Filters.sortItems(list, filters);
+    } else {
+      filtered = Filters.sortItems(items, filters)
     }
-    setHighestDmg(longest);
-  }
-
-  const findLongestRange = (list) => {
-    const filtered = list.map(o => ({range: o.range, name: o.name}));
-    filtered.sort((a,b) => b.range - a.range); 
-    if (filtered.length > 0) {
-      setLongestRange({range: filtered[0].range, name: filtered[0].name});
-    }
+    setFiltered(filtered);
+    setLongestRange(Filters.findLongestRange(filtered));
+    setHighestDmg(Filters.findHighestDmg(filtered));
+    setGraphSchool(Filters.graphSchoolRange(filtered));
   }
 
   const setHovering = (e) => {
@@ -106,10 +105,12 @@ function App() {
                   <option value='Warlock'>Warlock</option>
                   <option value='Wizard'>Wizard</option>
                 </select>
-                <Tippy content="For two comparisons that end in a tie, the tie is broken via the ordering of the content. 
-                    ie: two items with equal damage rolls will either be broken by the item first in name or has the largest range.">
-                  <label>Ordering (affects equal comparisons ℹ️)</label>
-                </Tippy>
+                <TippyTooltip className='mt-5' title='For two comparisons that end in a tie, the tie is broken via the ordering of the content. 
+                    ie: two items with equal damage rolls will either be broken by the item first in name or has the largest range.'
+                    position="bottom"
+                    trigger="mouseenter">
+                  <label>Ordering (ℹ️)</label>
+                </TippyTooltip>
                 <select name='ordering' className='select' onChange={handleChange}>
                   <option value='name'>Name ▼</option>
                   <option value='-name'>Name ▲</option>
@@ -117,12 +118,13 @@ function App() {
                   <option value='-range'>Range ▲</option>
                 </select>
               </form>
-              <h2 className='mt-5'>Spell Information</h2> 
-              {
+              <h2 className='mt-5'>How to use</h2> 
+              {/* blabalaalbalbababbablablblablablabl */}
+              {/* {
                 (hoveredValue == null)
                 ? <p>Hover over a spell to get started!</p>
                 : <InfoPage o={hoveredValue} />
-              }
+              } */}
             </nav>
           </div>
           <div className='contentBox mt-5 mb-5'>
@@ -142,11 +144,40 @@ function App() {
                 </tr>
               </thead>
               <tbody>
-                {items.map((o) => {
-                  return <Item key={crypto.randomUUID()} o={o} onHover={setHovering}/>
+                {filteredItems.map((o) => {
+                  return <Item key={o.id} o={o} onHover={setHovering}/>
                 })}
               </tbody>
             </table>
+          </div>
+          <div className='chartContainer mt-5'>
+            <div className='charts'>
+              <div className='chart'>
+                <h2 className='text-center'>Max range by school</h2>
+                <div className='chartWrapper'>
+                  <ResponsiveContainer width="100%" height={225}>
+                    <BarChart responsive data={graphSchool} margin={{ top: 20, right: 20, left: -10, bottom: 0 }}>
+                      <XAxis name='schools' dataKey="school" axisLine={{ stroke: "#fcd34d" }} tick={{ fill: "#fcd34d", fontSize: 14 }} tickFormatter={(name) => name.slice(0, 3)}/>
+                      <YAxis axisLine={{ stroke: "#fcd34d" }} tick={{ fill: "#fcd34d", fontSize: 14 }} />
+                      <Legend />
+                      <Tooltip contentStyle={{
+                          backgroundColor: "#1f2937",
+                          borderRadius: "8px",
+                          border: "none",
+                          color: "#fcd34d"         
+                        }}
+                        labelStyle={{ color: "#fcd34d"}}  
+                        itemStyle={{ color: "#fcd34d" }}
+                        />
+                      <Bar dataKey="range" fill="rgb(107, 45, 45)" activeBar={{ fill: 'pink', stroke: 'yellow' }} radius={[10, 10, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+              <div className='chart'>
+
+              </div>
+            </div>
           </div>
         </div>
       </div>
