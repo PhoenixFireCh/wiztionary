@@ -1,0 +1,16 @@
+.Detail {
+    width: 80%;
+    padding: 20px;
+    border-radius: 20px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    background-image: url('./smpaper.jpg');
+    background-size: cover;
+    box-shadow: 3px 4px 5px rgba(20, 5, 5, 0.72);
+}
+
+
+.Detail p {
+    text-wrap: pre-wrap;
+}
