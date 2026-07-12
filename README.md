@@ -36,7 +36,7 @@ The following **additional** features are implemented:
 
 ## Video Walkthrough
 
-Here's a walkthrough of implemented user stories: https://imgur.com/a/EGwWJ45
+Here's a walkthrough of implemented user stories: https://imgur.com/a/M2Rjbj1
 
 <!-- Replace this with whatever GIF tool you used! -->
 GIF created with ScreentoGif
