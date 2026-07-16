@@ -4,6 +4,8 @@ import './index.css'
 import App from './App.jsx'
 import Home from './routes/Home.jsx'
 import Detail from './routes/Detail.jsx'
+import PostCharacter from './routes/PostCharacter.jsx'
+import ReadCharacters from './routes/ReadCharacters.jsx'
 import { BrowserRouter, Route, Routes } from "react-router"
 
 createRoot(document.getElementById('root')).render(
@@ -12,6 +14,8 @@ createRoot(document.getElementById('root')).render(
       <Route path='/' element={<App/>}>
         <Route index element={<Home/>}/>
         <Route path='/detail/:name' element={<Detail/>}/>
+        <Route path='/postcharacter' element={<PostCharacter/>}/>
+        <Route path='/readcharacter' element={<ReadCharacters/>}/>
       </Route>
     </Routes>
   </BrowserRouter>

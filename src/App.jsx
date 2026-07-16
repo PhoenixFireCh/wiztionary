@@ -18,6 +18,8 @@ function App() {
               <div className='icon ml-1'></div>
             </div>
             <div className='links mr-5'>
+              <Link to="/postcharacter">Character Creator</Link>
+              <Link to="/readcharacter">Character Gallery</Link>
               <Link to="/">Home</Link>
               <a href='https://github.com/PhoenixFireCh/wictionary'>Github Repository</a>
               <a href='https://open5e.com/api-docs'>Api Used</a>

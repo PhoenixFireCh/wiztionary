@@ -1,0 +1,13 @@
+.characterList {
+    width: 80%;
+    height: 200px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    background-image: url('./paper.png');
+    background-attachment: fixed;
+    background-size: cover;
+    box-shadow: inset 3px 4px 1px rgba(20, 5, 5, 0.72);
+}

@@ -1,6 +1,6 @@
 
 
-const Item = (prop) => {
+const SpellLong = (prop) => {
 
     return (
         <tr className="mt-1.5" data-value={JSON.stringify(prop.o)} onClick={prop.onClick}>
@@ -13,4 +13,4 @@ const Item = (prop) => {
     );
 }
 
-export default Item;
+export default SpellLong;

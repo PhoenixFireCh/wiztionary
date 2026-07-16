@@ -1,0 +1,108 @@
+.wrapper {
+    height: 100%;
+    width: 100%;
+}
+
+.postCharacterForm {
+    display: flex;
+    flex-direction: row;
+    position:fixed;
+    width: 100%;
+    height: 90%;
+    justify-content: space-around;
+    align-items: start;
+}
+
+.mainStats, .abilityScoreContainer, .spells, .descriptionEditor {
+    border-radius: 20px;
+    padding: 10px;
+    background-image: url('./wood.png');
+    background-size: cover;
+    box-shadow: 0px 4px 5px rgba(0, 0, 0);
+    display: flex;
+}
+
+.mainStats, .spells {
+    flex-direction: column;
+    align-items: center;
+}
+
+.mainStats {
+    width: 20%;
+    height: 90%;
+}
+
+.rightPanel {
+    width: 75%;
+    height: 90%;
+}
+
+.lowerPanel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 100%;
+    height: 65%;
+}
+
+.abilityScoreContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 30%;
+}
+
+.abilityScore {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.ability {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 10px 0 10px;
+}
+
+.spells {
+    width: 47%;
+    height: 100%;
+}
+
+.spellList {
+  width: 95%;
+  height: 95%;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  background-image: url('./paper.png');
+  background-attachment: fixed;
+  background-size: cover;
+  box-shadow: inset 3px 4px 1px rgba(20, 5, 5, 0.72);
+}
+
+.spellList > table {
+    height: 35%;
+    width: 95%;
+    overflow-y: scroll;
+}
+
+.descriptionEditor {
+    width: 47%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.descriptionEditor > textarea {
+    width: 100%;
+    height: 80%;
+}
+
+
+

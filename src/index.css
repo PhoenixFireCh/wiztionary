@@ -50,3 +50,38 @@ label {
   text-align: center;
 }
 
+.text {
+  background-color: beige;
+  color: rgb(36, 36, 36);
+  border-radius: 5px;
+  box-shadow: inset 0px 4px 1px rgb(148 55 55 / 72%);
+}
+
+.select {
+  background-color: beige;
+  color: rgb(36, 36, 36);
+  border-radius: 5px;
+  box-shadow: inset 0px 4px 1px rgb(148 55 55 / 72%);
+}
+
+.range::-webkit-slider-runnable-track {
+  background: beige;
+  height: auto;
+  box-shadow: inset 0px 4px 1px rgb(148 55 55 / 72%);
+  border-radius: 10px;
+}
+
+.range {
+  accent-color: rgb(36, 36, 36);;
+}
+
+.number {
+  width: 80px;
+  height: 80px;
+  font-size: 30px;
+  text-align: center;
+  background-color: beige;
+  color: rgb(36, 36, 36);
+  box-shadow: inset 0px 4px 1px rgb(148 55 55 / 72%);
+  border-radius: 20px;
+}
