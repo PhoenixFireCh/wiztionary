@@ -31,7 +31,7 @@ export const Filters = {
     }
 
   },
-  sortItems(list, parameters) {
+  sortItemsHarsh(list, parameters) {
     // filter by Search
     let result = list;
     if (parameters.search != "") {
@@ -53,6 +53,28 @@ export const Filters = {
 
     // order everything up
     result = result.sort(sorters[parameters.ordering]);
+    return result;
+  },
+  sortItemsGentle(list, parameters) {
+    // filter by Search
+    let result = list;
+    if (parameters.search != "") {
+        result = result.filter(item => 
+            item.name.toLowerCase().includes(parameters.search.toLowerCase())
+        );
+    }
+    // filter by level
+    result = result.filter(item => 
+        item.level <= parameters.level
+    );
+
+    // filter by class
+    if (parameters.class != "") {
+        result = result.filter(item => 
+        item.classes.some(cls => cls.name === parameters.class) || 
+        item.classes.length === 0
+      );
+    }
     return result;
   },
   graphSchoolRange(list) {
@@ -84,5 +106,12 @@ export const Filters = {
                   return {count, sides};
                 });
     return split.reduce((sum, die) => sum + (die.count * die.sides), 0);
+  },
+  addId(json) {
+    let result = json.results.map(item => ({
+      ...item,
+      id: crypto.randomUUID()
+    }));
+    return result;
   }
 };

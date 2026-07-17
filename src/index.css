@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-h1, h2, h3, p, label, th, input, select, option, a  {
+h1, h2, h3, p, label, th, input, select, option, a, button  {
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
@@ -38,6 +38,8 @@ tr {
 }
 
 th {
+  display: flex;
+  justify-content: center;
   width: 100px;;
 }
 
@@ -84,4 +86,23 @@ label {
   color: rgb(36, 36, 36);
   box-shadow: inset 0px 4px 1px rgb(148 55 55 / 72%);
   border-radius: 20px;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+button {
+  color: rgb(36, 36, 36);
+  padding: 5px 10px 5px 10px;
+  border-radius: 10px;
+  background-color: beige;
+  box-shadow: 0px 2px 2px rgb(148 55 55 / 72%);
+  transition: box-shadow ease 0.3s;
+}
+
+button:hover {
+  box-shadow: 0px 1px 1px rgba(220, 216, 171, 0.72) , inset 0px 4px 1px rgb(148 55 55 / 72%);
 }

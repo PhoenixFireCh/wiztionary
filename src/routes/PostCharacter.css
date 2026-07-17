@@ -3,6 +3,13 @@
     width: 100%;
 }
 
+.submitButton {
+    padding: 1px 40px 1px 40px;
+    font-size: x-large;
+}
+
+
+
 .postCharacterForm {
     display: flex;
     flex-direction: row;
@@ -75,7 +82,7 @@
 
 .spellList {
   width: 95%;
-  height: 95%;
+  height: 98%;
   border-radius: 20px;
   display: flex;
   align-items: center;
@@ -86,10 +93,15 @@
   box-shadow: inset 3px 4px 1px rgba(20, 5, 5, 0.72);
 }
 
-.spellList > table {
+.spellList tr {
+    width: 100%;
+}
+
+.tableContainer, .tableContainer > table {
     height: 35%;
     width: 95%;
     overflow-y: scroll;
+    scrollbar-color: rgb(36, 36, 36) rgba(245, 245, 220, 0);
 }
 
 .descriptionEditor {
@@ -101,8 +113,12 @@
 
 .descriptionEditor > textarea {
     width: 100%;
-    height: 80%;
+    height: 85%;
+    padding: 5px;
+    border-radius: 20px;
 }
+
+
 
 
 

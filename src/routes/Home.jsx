@@ -24,10 +24,7 @@ function Home() {
     const fetchData = async () => {
       const response = await fetch("https://api.open5e.com/v2/spells/?limit=10000&fields=name,level,classes,damage_roll,range,duration,desc,target_type,school");
       let json = await response.json();
-      json = json.results.map(item => ({
-        ...item,
-        id: crypto.randomUUID()
-      }));
+      json = Filters.addId(json);
       json = json.filter(item => item.range <= 10000); //Filters certain spells with comically ridiculous range (they break my graphs)
       setItems(json);
       updateVars(json); // Update vars as soon as it loads
@@ -52,9 +49,9 @@ function Home() {
   const updateVars = (list) => {
     let filtered;
     if (list != null) {
-      filtered = Filters.sortItems(list, filters);
+      filtered = Filters.sortItemsHarsh(list, filters);
     } else {
-      filtered = Filters.sortItems(items, filters)
+      filtered = Filters.sortItemsHarsh(items, filters)
     }
     setFiltered(filtered);
     setLongestRange(Filters.findLongestRange(filtered));
