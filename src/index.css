@@ -17,7 +17,7 @@ h2 {
 }
 
 h3 {
-  font-size: 25px;
+  font-size: 20px;
 }
 
 a, .links Link{
@@ -88,6 +88,14 @@ label {
   border-radius: 20px;
 }
 
+.ability {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 10px 0 10px;
+}
+
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   appearance: none;
@@ -105,4 +113,30 @@ button {
 
 button:hover {
   box-shadow: 0px 1px 1px rgba(220, 216, 171, 0.72) , inset 0px 4px 1px rgb(148 55 55 / 72%);
+}
+
+.tableContainer {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: 35%;
+    width: 100%;
+    overflow-y: scroll;
+    scrollbar-color: rgb(36, 36, 36) rgba(245, 245, 220, 0);
+}
+
+.tableContainer > table {
+    height: 100%;
+    width: 95%;
+}
+
+tbody tr {
+  background-color: rgba(28, 33, 43, 0.449);
+  border-radius: 10px;
+  transition: ease 0.3s;
+}
+
+tbody tr:hover {
+  scale: 1.05;
+  background-color: rgba(28, 33, 43, 0.682);
 }

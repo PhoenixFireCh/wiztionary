@@ -113,5 +113,8 @@ export const Filters = {
       id: crypto.randomUUID()
     }));
     return result;
+  },
+  checkAbilityScore(total, score) {
+    return total - score.strength - score.dexterity - score.constitution - score.intelligence - score.wisdom - score.charisma;
   }
 };

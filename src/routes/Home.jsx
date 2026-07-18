@@ -22,7 +22,7 @@ function Home() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("https://api.open5e.com/v2/spells/?limit=10000&fields=name,level,classes,damage_roll,range,duration,desc,target_type,school");
+      const response = await fetch("https://api.open5e.com/v2/spells/?limit=10000&fields=name,level,classes,damage_roll,range,duration,desc,target_type,school,key");
       let json = await response.json();
       json = Filters.addId(json);
       json = json.filter(item => item.range <= 10000); //Filters certain spells with comically ridiculous range (they break my graphs)
@@ -61,14 +61,13 @@ function Home() {
   }
 
   const changePage = (e) => {
-    // e.preventDefault();
-    const object = JSON.parse(e.currentTarget.dataset.value)
-    navigate(`/detail/${object.name}`, {state: {object: object}});
+      const object = items.find(item => item.key === e.currentTarget.dataset.value)
+      navigate(`/spelldetail/${object.name}`, {state: {object: object}});
   }
 
   return (
-    <>
-        <div className='navBarContainer mt-5'>
+    <div className='Home'>
+      <div className='navBarContainer mt-5'>
           <nav>
               <h2>Filters</h2>
               <form>
@@ -175,8 +174,8 @@ function Home() {
               </div>
             </div>
         </div>
-        </div>
-    </>
+      </div>
+    </div>
   )
 }
 

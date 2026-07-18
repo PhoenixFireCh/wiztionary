@@ -1,7 +1,7 @@
 import { useLocation, useParams } from 'react-router';
 import './Detail.css'
 
-function Detail() {
+function SpellDetail() {
     const { name } = useParams();
     const { state } = useLocation();
     const object = state?.object;
@@ -22,4 +22,4 @@ function Detail() {
 
 }
 
-export default Detail
+export default SpellDetail

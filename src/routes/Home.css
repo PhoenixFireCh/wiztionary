@@ -1,9 +1,18 @@
-.navBarContainer {
+.Home {
+  display: inherit;
+  flex-direction: inherit;
+  align-items: inherit;
+  justify-content: inherit;
+  width: 100%;
+  height: 100%;
+}
+
+.Home .navBarContainer {
   height: 80%;
   width: 15%;
 }
 
-nav{
+.Home nav{
   height: inherit;
   width: inherit;
   position: fixed;
@@ -17,13 +26,13 @@ nav{
   box-shadow: 0px 4px 5px rgba(0, 0, 0);
 }
 
-form {
+.Home form {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.contentBox {
+.Home .contentBox {
   width: 45%;
   border-radius: 20px;
   display: flex;
@@ -35,37 +44,26 @@ form {
   box-shadow: inset 3px 4px 1px rgba(20, 5, 5, 0.72);
 }
 
-.cardBox {
+.Home .cardBox {
   height: 150px;
   width: 100%;
   display: flex;
   justify-content: space-around;
 }
 
-.itemBox {
+.Home .itemBox {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-tbody tr {
-  background-color: rgba(28, 33, 43, 0.449);
-  border-radius: 10px;
-  transition: ease 0.3s;
-}
-
-tbody tr:hover {
-  scale: 1.05;
-  background-color: rgba(28, 33, 43, 0.682);
-}
-
-.chartContainer {
+.Home .chartContainer {
   width: 30%;
   height: 80%;
 }
 
-.charts {
+.Home .charts {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -75,7 +73,7 @@ tbody tr:hover {
   position: fixed;
 }
 
-.chart {
+.Home .chart {
   width: 100%;
   height: 48%;
   border-radius: 20px;
@@ -86,7 +84,7 @@ tbody tr:hover {
   box-shadow: 0px 4px 5px rgba(0, 0, 0);
 }
 
-.chartWrapper {
+.Home .chartWrapper {
   background-image: url('./smpaper.jpg');
   border-radius: 20px;
   box-shadow: inset 3px 4px 1px rgba(20, 5, 5, 0.72);

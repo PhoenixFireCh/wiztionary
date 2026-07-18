@@ -1,16 +1,19 @@
-.wrapper {
+.characterEditor {
     height: 100%;
     width: 100%;
 }
 
-.submitButton {
+.characterEditor .submitButton {
     padding: 1px 40px 1px 40px;
     font-size: x-large;
 }
 
+.characterEditor .resetButton, .characterEditor .deleteButton  {
+    padding: 1px 20px 1px 20px;
+    font-size: x-large;
+}
 
-
-.postCharacterForm {
+.characterEditor .postCharacterForm {
     display: flex;
     flex-direction: row;
     position:fixed;
@@ -20,7 +23,11 @@
     align-items: start;
 }
 
-.mainStats, .abilityScoreContainer, .spells, .descriptionEditor {
+.characterEditor .mainStats, 
+.characterEditor .abilityScoreContainer, 
+.characterEditor .spells, 
+.characterEditor .descriptionEditor, 
+.characterEditor .level {
     border-radius: 20px;
     padding: 10px;
     background-image: url('./wood.png');
@@ -29,22 +36,32 @@
     display: flex;
 }
 
-.mainStats, .spells {
+.characterEditor .mainStats, 
+.characterEditor .spells {
     flex-direction: column;
     align-items: center;
 }
 
-.mainStats {
+.characterEditor .mainStats {
     width: 20%;
-    height: 90%;
+    height: 87%;
 }
 
-.rightPanel {
+.characterEditor .rightPanel {
     width: 75%;
     height: 90%;
 }
 
-.lowerPanel {
+.characterEditor .upperPanel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 100%;
+    height: 30%;
+}
+
+.characterEditor .lowerPanel {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -53,36 +70,37 @@
     height: 65%;
 }
 
-.abilityScoreContainer {
-    width: 100%;
-    display: flex;
+.characterEditor .level {
+    width: 20%;
+    height: 100%;
+    background-image: url('./smpaper.jpg');
+    align-items: center;
+    justify-content: center;
     flex-direction: column;
-    height: 30%;
 }
 
-.abilityScore {
+.characterEditor .abilityScoreContainer {
+    width: 79%;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.characterEditor .abilityScore {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
 }
 
-.ability {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 0 10px 0 10px;
-}
-
-.spells {
-    width: 47%;
+.characterEditor .spells {
+    width: 49%;
     height: 100%;
 }
 
-.spellList {
+.characterEditor .spellList {
   width: 95%;
-  height: 98%;
+  height: 100%;
   border-radius: 20px;
   display: flex;
   align-items: center;
@@ -93,28 +111,21 @@
   box-shadow: inset 3px 4px 1px rgba(20, 5, 5, 0.72);
 }
 
-.spellList tr {
+.characterEditor .spellList tr {
     width: 100%;
 }
 
-.tableContainer, .tableContainer > table {
-    height: 35%;
-    width: 95%;
-    overflow-y: scroll;
-    scrollbar-color: rgb(36, 36, 36) rgba(245, 245, 220, 0);
-}
-
-.descriptionEditor {
-    width: 47%;
+.characterEditor .descriptionEditor {
+    width: 50%;
     height: 100%;
     display: flex;
     flex-direction: column;
 }
 
-.descriptionEditor > textarea {
+.characterEditor .descriptionEditor > textarea {
     width: 100%;
-    height: 85%;
-    padding: 5px;
+    height: 90%;
+    padding: 10px;
     border-radius: 20px;
 }
 

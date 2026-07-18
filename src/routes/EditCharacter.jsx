@@ -1,40 +1,26 @@
-import { useState, useEffect } from 'react'
+import { Navigate, useNavigate, useLocation, useParams} from 'react-router';
+import { useState, useEffect, useRef } from 'react'
 import { Filters } from '../Filters.js'
-import { Navigate, useNavigate  } from 'react-router';
 import SpellShort from '../components/SpellShort.jsx';
-import { supabase } from '../client'
+import { supabase } from '../client.js'
 import './PostCharacter.css';
 
-function PostCharacter() {
-    const totalAbilityPoints = 27;
-
+function EditCharacter() {
+    //UNPACKING
     const navigate = useNavigate();
+    const { id } = useParams();
+    const { state } = useLocation();
+    const unpacked = state?.object;
+    const initialized = useRef(false);
+
+    const totalAbilityPoints = 27;
     const [filteredSpells, setFiltered] = useState([]);
     const [spells, setSpells] = useState([]); 
     const [species, setSpecies] = useState([]);
     const [backgrounds, setBackgrounds] = useState([]);
     const [search, setSearch] = useState('');
     //Will be submitted to DB
-    const [response, setResponse] = useState(
-        {
-            name:"",
-            species:"",
-            level:0,
-            class:"",
-            background: "",
-            alignment: "",
-            abilityScore: {
-                strength: 0,
-                dexterity: 0,
-                constitution: 0,
-                intelligence: 0,
-                wisdom: 0,
-                charisma: 0
-            },
-            spells: [],
-            desc: ""
-        }
-    )
+    const [response, setResponse] = useState(unpacked)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -60,17 +46,16 @@ function PostCharacter() {
             setSpecies(speciesJson);
             setBackgrounds(backgroundsJson);
             setSpells(spellJson);
-            filterLevelClass(spellJson); //sets the filtering
-            setResponse(prev => ({...prev,
-                background: backgroundsJson[0].name,
-                species: speciesJson[0].name
-            }));
-            
+            filter(spellJson); //Not filterLevel class as that will erase current datas
         }
         fetchData().catch(console.error);
     }, [])
 
     useEffect(() => {
+        if (!initialized.current) { //Prevents initial run of useEffect (deletes data)
+            initialized.current = true;
+            return
+        }; 
         filterLevelClass();
     }, [response.class, response.level]);
 
@@ -103,13 +88,24 @@ function PostCharacter() {
         responseOut.spells = JSON.stringify(response.spells);
         responseOut.abilityScore = JSON.stringify(response.abilityScore);
         if (Filters.checkAbilityScore(totalAbilityPoints, response.abilityScore) >= 0) {
-            await supabase
+            const { data, error } = await supabase
             .from('Characters')
-                .insert(responseOut)
+                .update(responseOut)
+                .eq("id", id);
+            if (error) console.error(error);
             window.location = "/readcharacter";
         } else {
             alert('Invalid stats! Please check again!')
         }
+    }
+
+    const deleteFromDB = async (e) => {
+        const { data, error } = await supabase
+            .from("Characters")
+            .delete()
+            .eq("id", id);
+        if (error) console.error(error);
+        window.location = "/readcharacter";
     }
 
     const addItem  = (e) => {
@@ -163,34 +159,15 @@ function PostCharacter() {
 
     const reset = (e) => {
         e.preventDefault();
-        setResponse(
-            {
-                name:"",
-                species:species[0],
-                level:0,
-                class:"",
-                background: backgrounds[0],
-                alignment: "",
-                abilityScore: {
-                    strength: 0,
-                    dexterity: 0,
-                    constitution: 0,
-                    intelligence: 0,
-                    wisdom: 0,
-                    charisma: 0
-                },
-                spells: [],
-                desc: ""
-            }
-        )
+        setResponse(unpacked);
     }
-    
-    
+
     return (
         <div className='characterEditor'>
             <div className='buttons ml-[2%]'>
-                <button className='submitButton mr-2' onClick={submitToDB}>Create!</button>
-                <button className='resetButton' onClick={reset}>Reset</button>
+                <button className='submitButton mr-2' onClick={submitToDB}>Update!</button>
+                <button className='resetButton mr-2' onClick={reset}>Reset</button>
+                <button className='deleteButton mr-2' onClick={deleteFromDB}>Delete</button>
             </div>
             <form className='postCharacterForm mt-2'>
                 <div className='mainStats'>
@@ -318,4 +295,4 @@ function PostCharacter() {
     )
 }
 
-export default PostCharacter
+export default EditCharacter
