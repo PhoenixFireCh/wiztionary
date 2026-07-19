@@ -32,7 +32,7 @@ const CharacterCard = ({o, bodyClick, editButtonClick, delButtonClick}) => {
                         </div>
                         <div className="ability">
                             <h3>Dex</h3>
-                            <h3>{o.abilityScore.strength}</h3>
+                            <h3>{o.abilityScore.dexterity}</h3>
                         </div>
                         <div className="ability">
                             <h3>Con</h3>

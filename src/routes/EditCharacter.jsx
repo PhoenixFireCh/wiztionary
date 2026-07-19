@@ -10,7 +10,12 @@ function EditCharacter() {
     const navigate = useNavigate();
     const { id } = useParams();
     const { state } = useLocation();
-    const unpacked = state?.object;
+    const storageKey = `character:${id}`;
+    let recovered = state?.object ?? null;
+    if (!recovered) {
+        try { recovered = JSON.parse(sessionStorage.getItem(storageKey)) } catch { recovered = null }
+    }
+    const unpacked = recovered;
     const initialized = useRef(false);
 
     const totalAbilityPoints = 27;
@@ -22,6 +27,14 @@ function EditCharacter() {
     //Will be submitted to DB
     const [response, setResponse] = useState(unpacked)
 
+    //Cache the passed character so a refresh can recover it (state is lost on hard reload)
+    useEffect(() => {
+        if (state?.object) {
+            try { sessionStorage.setItem(storageKey, JSON.stringify(state.object)) } catch { /* storage full/disabled */ }
+        }
+    }, [state, storageKey]);
+
+    //Fetches API Data and sets all backgrounds and such
     useEffect(() => {
         const fetchData = async () => {
             //Fetching data
@@ -46,32 +59,17 @@ function EditCharacter() {
             setSpecies(speciesJson);
             setBackgrounds(backgroundsJson);
             setSpells(spellJson);
-            filter(spellJson); //Not filterLevel class as that will erase current datas
+            filter(spellJson);
         }
         fetchData().catch(console.error);
     }, [])
 
-    useEffect(() => {
-        if (!initialized.current) { //Prevents initial run of useEffect (deletes data)
-            initialized.current = true;
-            return
-        }; 
-        filterLevelClass();
-    }, [response.class, response.level]);
-
+    //Filters the spell upon any changes that affect spells
     useEffect(() => {
         filter();
-    }, [search])
+    }, [search, response?.class, response?.level])
 
-    const filterLevelClass = (list) => {
-        filter(list);
-        // Clear and reset function upon changing level and/or class
-        setResponse((prev) => ({
-            ...prev,
-            spells: []
-        }));
-    }
-
+    //Filters all spell items
     const filter = (list) => {
         let filtered;
         if (list != null) {
@@ -82,6 +80,7 @@ function EditCharacter() {
         setFiltered(filtered);
     }
 
+    //Does an update request using the id given in the unpacking
     const submitToDB = async (e) => {
         e.preventDefault();
         let responseOut = structuredClone(response);
@@ -99,6 +98,7 @@ function EditCharacter() {
         }
     }
 
+    //Deletes this entry using the id given during the unpacking.
     const deleteFromDB = async (e) => {
         const { data, error } = await supabase
             .from("Characters")
@@ -108,6 +108,7 @@ function EditCharacter() {
         window.location = "/readcharacter";
     }
 
+    //Adds a spell to response
     const addItem  = (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -121,6 +122,7 @@ function EditCharacter() {
         }
     }
 
+    //Removes a spell from response
     const removeItem = (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -130,11 +132,13 @@ function EditCharacter() {
         }));
     }
 
+    //Changes page based on spell
     const changePage = (e) => {
         const object = filteredSpells.find(item => item.key === e.currentTarget.dataset.value)
         navigate(`/spelldetail/${object.name}`, {state: {object: object}});
     }
-
+    
+    //Handles different changes and routes them to the correct response.
     const handleChange = (e) => {
         e.preventDefault();
         const {name, value} = e.target;
@@ -152,14 +156,26 @@ function EditCharacter() {
         } else {
             setResponse((prev) => ({
                 ...prev,
-                [name]: value
+                [name]: value,
+                // Changing class/level invalidates the current spell selection
+                ...((name === 'class' || name === 'level') ? { spells: [] } : {})
             }))
-        }  
+        }
     }
 
+    //Resets the character before any changes.
     const reset = (e) => {
         e.preventDefault();
         setResponse(unpacked);
+    }
+
+    if (!response) {
+        return (
+            <div className='characterEditor'>
+                <h1>Character unavailable</h1>
+                <p className="mt-3">Open this character from the Character Gallery to edit it.</p>
+            </div>
+        )
     }
 
     return (

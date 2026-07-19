@@ -7,7 +7,7 @@ import './Home.css'
 import { Filters } from '../Filters.js'
 import { Tooltip as TippyTooltip } from 'react-tippy';
 import 'react-tippy/dist/tippy.css';
-import {ScatterChart, Scatter, XAxis, YAxis, ZAxis, Legend, BarChart, Bar, CartesianGrid, Tooltip, ResponsiveContainer} from 'recharts';
+import {XAxis, YAxis, Legend, BarChart, Bar, Tooltip, ResponsiveContainer} from 'recharts';
 import { Navigate, useNavigate  } from 'react-router';
 
 function Home() {

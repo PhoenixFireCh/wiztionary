@@ -46,7 +46,7 @@ export const Filters = {
 
     // filter by class
     if (parameters.class != "") {
-        result = result = result.filter(item => 
+        result = result.filter(item => 
         item.classes.some(cls => cls.name === parameters.class)
         );
     }
@@ -101,11 +101,15 @@ export const Filters = {
     return Array.from(result, ([school, dmg]) => ({school, dmg}));
   }, 
   parseDice(string) {
-    const split = string.split("+").map(die => {
-                  const [count, sides] = die.split("d").map(Number);
-                  return {count, sides};
-                });
-    return split.reduce((sum, die) => sum + (die.count * die.sides), 0);
+    const terms = string.split("+").map(term => term.trim()).filter(term => term.length > 0);
+    if (terms.length === 0) return NaN;   // preserves "" -> NaN (empty rolls stay excluded)
+    return terms.reduce((sum, term) => {
+      if (term.includes("d")) {
+        const [count, sides] = term.split("d").map(Number);
+        return sum + (count * sides);
+      }
+      return sum + Number(term);           // flat modifier or fixed-damage number
+    }, 0);
   },
   addId(json) {
     let result = json.results.map(item => ({

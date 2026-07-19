@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Filters } from '../Filters.js'
 import { Navigate, useNavigate  } from 'react-router';
 import SpellShort from '../components/SpellShort.jsx';
@@ -6,16 +6,20 @@ import { supabase } from '../client'
 import './PostCharacter.css';
 
 function PostCharacter() {
-    const totalAbilityPoints = 27;
-
     const navigate = useNavigate();
+    const storageKey = `TemporaryCharacterCreation`;
+    let recovered = null;
+    try { recovered = JSON.parse(sessionStorage.getItem(storageKey))} catch {recovered == null}
+    
+    const totalAbilityPoints = 27; //Maximum ability points based on point shop method.
+    const submittedRef = useRef(false); // When true, the save handler discards the draft instead of persisting it (set on a successful submit).
     const [filteredSpells, setFiltered] = useState([]);
     const [spells, setSpells] = useState([]); 
     const [species, setSpecies] = useState([]);
     const [backgrounds, setBackgrounds] = useState([]);
     const [search, setSearch] = useState('');
     //Will be submitted to DB
-    const [response, setResponse] = useState(
+    const [response, setResponse] = useState( recovered == null ?
         {
             name:"",
             species:"",
@@ -33,10 +37,29 @@ function PostCharacter() {
             },
             spells: [],
             desc: ""
-        }
+        } :
+        recovered
     )
 
+    //Saves to memory so you don't have to re-write the entire character.
     useEffect(() => {
+        const save = () => {
+            if (submittedRef.current) {
+                try { sessionStorage.removeItem(storageKey) } catch { }
+                return
+            }
+            try { sessionStorage.setItem(storageKey, JSON.stringify(response)) } catch { }
+        }
+        // Fires on a hard navigation/refresh/tab-close (also covers bfcache).
+        window.addEventListener("pagehide", save);
+        return () => {
+            window.removeEventListener("pagehide", save);
+            save();
+        }
+    }, [response])
+
+    useEffect(() => {
+        //Fetches API data upon start
         const fetchData = async () => {
             //Fetching data
             const spellsResponse = await fetch("https://api.open5e.com/v2/spells/?limit=10000&fields=name,level,classes,damage_roll,range,duration,desc,target_type,school,key")
@@ -60,7 +83,7 @@ function PostCharacter() {
             setSpecies(speciesJson);
             setBackgrounds(backgroundsJson);
             setSpells(spellJson);
-            filterLevelClass(spellJson); //sets the filtering
+            filter(spellJson); //sets the filtering
             setResponse(prev => ({...prev,
                 background: backgroundsJson[0].name,
                 species: speciesJson[0].name
@@ -70,23 +93,12 @@ function PostCharacter() {
         fetchData().catch(console.error);
     }, [])
 
-    useEffect(() => {
-        filterLevelClass();
-    }, [response.class, response.level]);
-
+    //Filters the spell upon any changes that affect spells
     useEffect(() => {
         filter();
-    }, [search])
+    }, [search, response.class, response.level])
 
-    const filterLevelClass = (list) => {
-        filter(list);
-        // Clear and reset function upon changing level and/or class
-        setResponse((prev) => ({
-            ...prev,
-            spells: []
-        }));
-    }
-
+    //filters all spell items
     const filter = (list) => {
         let filtered;
         if (list != null) {
@@ -97,27 +109,33 @@ function PostCharacter() {
         setFiltered(filtered);
     }
 
+    // Submits an insert call to insert all data in. Data being sent in includes names, spells, ect.
+    // The entire spell is sent in in the event the API changes and the spell no longer exists.
     const submitToDB = async (e) => {
         e.preventDefault();
         let responseOut = structuredClone(response);
         responseOut.spells = JSON.stringify(response.spells);
         responseOut.abilityScore = JSON.stringify(response.abilityScore);
         if (Filters.checkAbilityScore(totalAbilityPoints, response.abilityScore) >= 0) {
-            await supabase
-            .from('Characters')
+            let { data, error } =  await supabase
+                .from('Characters')
                 .insert(responseOut)
+            if (error) console.error(error);
+            // Discard the draft so the submitted data isn't restored on re-entry.
+            submittedRef.current = true;
             window.location = "/readcharacter";
         } else {
             alert('Invalid stats! Please check again!')
         }
     }
 
+    //Adds the item to spells using the key of the item to spells. Adds the entire spell object.
     const addItem  = (e) => {
         e.preventDefault();
         e.stopPropagation();
         const key = e.target.value;
         const object = filteredSpells.find(item => item.key === key);
-        if (!response.spells.some(item => item.key === key)) {
+        if (!response.spells.some(item => item.key === key)) { //Prevents clones of the same spell (Not of the same name however due to multiple books having similar spells with different properties).
             setResponse((prev) => ({
                 ...prev, 
                 spells: [...prev.spells, object]
@@ -125,6 +143,7 @@ function PostCharacter() {
         }
     }
 
+    // Removes the item based on the key from spell. 
     const removeItem = (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -134,10 +153,12 @@ function PostCharacter() {
         }));
     }
 
+    // Changes the page to a spell detail. Uses the extracted key to get and display the spell
     const changePage = (e) => {
         const object = filteredSpells.find(item => item.key === e.currentTarget.dataset.value)
         navigate(`/spelldetail/${object.name}`, {state: {object: object}});
     }
+
 
     const handleChange = (e) => {
         e.preventDefault();
@@ -156,11 +177,14 @@ function PostCharacter() {
         } else {
             setResponse((prev) => ({
                 ...prev,
-                [name]: value
+                [name]: value,
+                // Changing class/level invalidates the current spell selection
+                ...((name === 'class' || name === 'level') ? { spells: [] } : {})
             }))
-        }  
+        }
     }
 
+    //Resets the character to the default response.
     const reset = (e) => {
         e.preventDefault();
         setResponse(

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { Filters } from '../Filters.js'
 import { Navigate, useNavigate  } from 'react-router';
 import { supabase } from '../client'
 import './ReadCharacters.css'
@@ -9,21 +8,24 @@ function ReadCharacters() {
     const navigate = useNavigate();
     const [items, setItems] = useState([]);
 
+    const fetchData = async () => {
+        let { data, error } = await supabase
+        .from("Characters")
+        .select("*");
+        if (error) console.error(error);
+        //Ensure data is readable
+        data.forEach(cls => {
+            cls.spells = JSON.parse(cls.spells),
+            cls.abilityScore = JSON.parse(cls.abilityScore)
+        })
+        setItems(data);
+    }
+
     useEffect(() => {
-        const fetchData = async () => {
-            let { data, error } = await supabase
-            .from("Characters")
-            .select("*");
-            if (error) console.error(error);
-            //Ensure data is readable
-            data.forEach(cls => {
-                cls.spells = JSON.parse(cls.spells),
-                cls.abilityScore = JSON.parse(cls.abilityScore)
-            })
-            setItems(data);
-        }
+        // setItems runs after an awaited network call (not synchronous), so no cascading render
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchData().catch(console.error);
-    }, [items])
+    }, [])
 
     const delItem = async (e) => {
         e.preventDefault();
@@ -33,7 +35,7 @@ function ReadCharacters() {
         .delete()
         .eq("id", e.target.value);
         if (error) console.error(error);
-        setItems([])
+        await fetchData();
     }
 
     const changePageCharacter = (e) => {

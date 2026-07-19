@@ -1,3 +1,9 @@
+.CharacterDetail {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 .CharacterDetail .topBar {
     display: flex;
     flex-direction: row;
@@ -6,14 +12,25 @@
 
 .CharacterDetail .basicStats {
     display:flex;
-    justify-content: space-between;
     padding: 0px 10px 0px 10px;
+    flex-direction: column;
+    width: 50%;
+    height: 500px;
+    justify-content: flex-start;
+
 }
 
 .CharacterDetail .statBar {
     display: flex;
+    flex-direction: row;
+    height: 20%;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.CharacterDetail .information {
+    display: flex;
     flex-direction: column;
-    justify-content:  center;
 }
 
 .CharacterDetail .editButton {
@@ -29,7 +46,9 @@
     justify-content: center;
     width: 150px;
     height: 150px;
-    background-image: url('./smpaper.jpg');
+    background: 
+    linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)),
+    url("/smpaper.jpg");
     box-shadow: 0px 4px 5px rgba(0, 0, 0);
     border-radius: 20px;
 }
@@ -42,20 +61,19 @@
     box-shadow: inset 3px 4px 1px rgba(20, 5, 5, 0.72);
     border-radius: 20px;
     padding: 0 10px 0 10px;
+    justify-content: space-evenly;
+    margin-top: auto;
 }
 
 .CharacterDetail .advancedStats {
     display: flex;
+    flex-direction: column;
+    width: 50%;
 }
 
 .CharacterDetail .tableContainer {
-    width: 49%;
-    height: 300px;
-}
-
-.CharacterDetail .description {
-    width: 49%;
-    height: 300px;
+    width: 100%;
+    height: 250px;
 }
 
 .CharacterDetail th {
@@ -66,6 +84,8 @@
     display: flex;
     align-items: center;
     flex-direction: column;
+    width: 100%;
+    height: 250px;
 }
 
 .CharacterDetail .description > p {

@@ -7,7 +7,7 @@
     height: auto;
     display: flex;
     flex-direction: column;
-    background-image: url('./smpaper.jpg');
+    background-image: url('/smpaper.jpg');
     background-size: cover;
     box-shadow: 3px 4px 5px rgba(20, 5, 5, 0.72);
 }
